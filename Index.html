@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Kardashian Family Tree</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Raleway', sans-serif;
+  background: #F5EDE0;
+  min-height: 100vh;
+  color: #4A2E20;
+}
+.nav {
+  position: sticky; top: 0; z-index: 200;
+  background: #EDE0D0;
+  border-bottom: 1px solid #C9A882;
+  display: flex; align-items: center;
+  padding: 11px 20px; gap: 8px;
+}
+.nav-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px; font-weight: 600; flex: 1; letter-spacing: 0.3px; color: #4A2E20;
+}
+.pill-btn {
+  display: inline-block;
+  padding: 5px 16px;
+  border: 1px solid #A0785A;
+  border-radius: 99px;
+  background: transparent;
+  color: #A0785A;
+  font-family: 'Raleway', sans-serif; font-size: 12px;
+  cursor: pointer; text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.pill-btn:hover, .pill-btn.active { background: #4A2E20; color: #F5EDE0; }
+
+/* LIST */
+#list-view { max-width: 680px; margin: 0 auto; padding: 28px 16px 60px; }
+.list-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
+.list-controls-label { font-family: 'Raleway', sans-serif; font-size: 11px; color: #A0785A; letter-spacing: 1px; text-transform: uppercase; margin-right: 2px; }
+.section-divider {
+  font-family: 'Playfair Display', serif;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #B07850;
+  padding: 16px 0 6px; border-bottom: 1px solid #C9A882; margin-bottom: 8px;
+}
+.list-card {
+  display: flex; align-items: center;
+  background: #EDE0D0; border: 1px solid #C9A882; border-radius: 12px;
+  padding: 10px 14px; margin-bottom: 6px;
+  text-decoration: none; color: inherit; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(74,46,32,0.08);
+  transition: box-shadow 0.15s;
+}
+.list-card:hover { box-shadow: 0 6px 20px rgba(74,46,32,0.14); }
+.list-info { flex: 1; min-width: 0; }
+.list-name { font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #4A2E20; }
+.list-meta { font-family: 'Raleway', sans-serif; font-size: 11px; color: #A0785A; margin-top: 2px; }
+.list-arrow { color: #A0785A; font-size: 16px; margin-left: 8px; }
+
+/* CARD */
+#card-view { display: flex; justify-content: center; padding: 38px 16px 60px; min-height: calc(100vh - 57px); }
+.card-wrapper { width: 340px; max-width: 100%; }
+.card {
+  background: #EDE0D0; border: 1px solid #C9A882; border-radius: 26px;
+  padding: 28px 26px 26px; position: relative;
+  box-shadow: 0 4px 16px rgba(74,46,32,0.08);
+}
+.card-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; margin-bottom: 10px; line-height: 1.35; color: #4A2E20; }
+.card-field { font-family: 'Raleway', sans-serif; font-size: 12px; line-height: 2.0; color: #4A2E20; }
+.card-field b { font-weight: 600; }
+.card-fields { margin-bottom: 20px; }
+.card-connections-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; margin-bottom: 10px; color: #4A2E20; }
+.conn-group { margin-bottom: 10px; }
+.conn-group-label { font-family: 'Raleway', sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #A0785A; margin-bottom: 5px; }
+.conn-buttons { display: flex; flex-wrap: wrap; gap: 5px; }
+.conn-btn {
+  padding: 5px 13px;
+  border: 1px solid #A0785A; border-radius: 99px;
+  background: transparent; color: #A0785A;
+  font-family: 'Raleway', sans-serif; font-size: 11px;
+  cursor: pointer; text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.conn-btn:hover { background: #4A2E20; color: #F5EDE0; }
+.card-nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 2px 0; }
+.card-nav a { text-decoration: none; color: #A0785A; font-family: 'Raleway', sans-serif; font-size: 12px; padding: 6px 14px; border: 1px solid #C9A882; border-radius: 99px; transition: border-color 0.15s, color 0.15s; }
+.card-nav a:hover { border-color: #4A2E20; color: #4A2E20; }
+.card-nav .nav-center { font-family: 'Raleway', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #A0785A; text-decoration: none; cursor: pointer; }
+.card-nav .nav-center:hover { color: #4A2E20; }
+.card-nav .nav-spacer { width: 88px; visibility: hidden; }
+
+/* TREE */
+#tree-view {
+  position: relative;
+  height: calc(100vh - 57px);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+#tree-view.panning { cursor: grabbing; }
+#tree-transform { transform-origin: 0 0; display: inline-block; padding: 40px 60px 60px; }
+.tree-scroll { position: relative; width: max-content; }
+.tree-svg { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
+.tree-gen-spacer { height: 68px; }
+.tree-group { display: flex; align-items: center; gap: 4px; }
+.tree-sep { font-size: 10px; color: #A0785A; user-select: none; padding: 0 2px; align-self: center; }
+.tree-main-branches { display: flex; justify-content: center; align-items: flex-start; gap: 12px; }
+.branch { display: flex; flex-direction: column; align-items: center; }
+.tree-family-row { display: flex; justify-content: center; align-items: flex-start; gap: 20px; }
+.family-col { display: flex; flex-direction: column; align-items: center; }
+.tree-row-inner { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.tree-row-inner.gen4 { gap: 40px; }
+.tree-node {
+  display: flex; align-items: center; gap: 6px;
+  background: #C9A882; border: 1px solid #A0785A; border-radius: 10px;
+  padding: 5px 8px 5px 6px;
+  box-shadow: 0 1px 6px rgba(74,46,32,0.12);
+  white-space: nowrap; cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.1s;
+}
+.tree-node:hover { box-shadow: 0 4px 14px rgba(74,46,32,0.22); transform: translateY(-1px); }
+.tree-node-avatar {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: bold; flex-shrink: 0; overflow: hidden;
+  background: #A0785A; color: #F5EDE0;
+}
+.tree-node-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.tree-node-info { display: flex; flex-direction: column; }
+.tree-node-name { font-family: 'Playfair Display', serif; font-size: 9px; font-weight: 600; color: #4A2E20; line-height: 1.3; }
+.tree-node-role { font-family: 'Raleway', sans-serif; font-size: 8px; color: #4A2E20; line-height: 1.2; opacity: 0.75; }
+.tree-zoom-controls {
+  position: absolute; bottom: 20px; right: 20px;
+  display: flex; flex-direction: column; gap: 6px; z-index: 10;
+}
+.zoom-btn {
+  width: 32px; height: 32px;
+  background: #EDE0D0; border: 1px solid #A0785A; border-radius: 50%;
+  color: #4A2E20; font-size: 18px; line-height: 1;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-family: 'Raleway', sans-serif;
+  box-shadow: 0 2px 8px rgba(74,46,32,0.12);
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
+}
+.zoom-btn:hover { background: #4A2E20; color: #F5EDE0; }
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(245,237,224,0.82);
+  z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.modal-backdrop.tl-variant {
+  background: rgba(74,46,32,0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.modal-inner {
+  width: 340px; max-width: 100%;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto; position: relative; border-radius: 26px;
+}
+.modal-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #C9A882; border: 1px solid #A0785A; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #4A2E20; font-family: inherit; z-index: 10; line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+.modal-close:hover { background: #4A2E20; color: #F5EDE0; }
+
+/* SCROLL INDICATOR PILL */
+.scroll-pill {
+  position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+  background: #4A2E20; color: #F5EDE0;
+  font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600;
+  padding: 8px 16px; border-radius: 99px;
+  z-index: 150; pointer-events: none;
+  opacity: 0; transition: opacity 0.25s;
+  min-width: 48px; text-align: center;
+  box-shadow: 0 2px 12px rgba(74,46,32,0.20);
+}
+.scroll-pill.visible { opacity: 1; }
+
+/* TIMELINE */
+#timeline-view {
+  display: flex; flex-direction: column;
+  height: calc(100vh - 57px); overflow: hidden;
+}
+.tl-header {
+  display: flex; align-items: center; gap: 18px;
+  padding: 16px 24px 12px; flex-shrink: 0;
+  border-bottom: 1px solid #C9A882;
+}
+.tl-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 600; color: #4A2E20;
+}
+.tl-legend {
+  display: flex; align-items: center; gap: 14px;
+  font-family: 'Raleway', sans-serif; font-size: 11px; color: #4A2E20;
+}
+.tl-legend-item { display: flex; align-items: center; gap: 6px; }
+.tl-legend-swatch {
+  display: inline-block; width: 22px; height: 12px;
+  border-radius: 3px; border: 1px solid #A0785A; flex-shrink: 0;
+}
+.tl-legend-swatch.living  { background: #C9A882; }
+.tl-legend-swatch.deceased { background: #A0785A; }
+.tl-body {
+  flex: 1; overflow: auto; position: relative;
+}
+.tl-axis-row {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: stretch;
+  background: #F5EDE0;
+  border-bottom: 2px solid #B07850;
+  height: 34px;
+}
+.tl-name-header {
+  position: sticky; left: 0; z-index: 11;
+  width: 168px; min-width: 168px; flex-shrink: 0;
+  display: flex; align-items: center; padding: 0 14px 0 18px;
+  font-family: 'Raleway', sans-serif; font-size: 10px; font-weight: 600;
+  color: #A0785A; letter-spacing: 0.8px; text-transform: uppercase;
+  background: #F5EDE0;
+  border-right: 1px solid #C9A882;
+}
+.tl-axis-ticks-wrap { position: relative; flex-shrink: 0; overflow: visible; }
+.tl-tick {
+  position: absolute; bottom: 6px;
+  transform: translateX(-50%);
+  font-family: 'Raleway', sans-serif; font-size: 10px; color: #A0785A;
+  user-select: none; white-space: nowrap;
+}
+.tl-tick::before {
+  content: ''; position: absolute;
+  bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%);
+  width: 1px; height: 5px; background: #B07850;
+}
+.tl-row {
+  display: flex; align-items: stretch; height: 38px;
+}
+.tl-row.even { background: #F5EDE0; }
+.tl-row.odd  { background: #EDE0D0; }
+.tl-name-cell {
+  position: sticky; left: 0; z-index: 5;
+  width: 168px; min-width: 168px; flex-shrink: 0;
+  display: flex; align-items: center; padding: 0 14px 0 18px;
+  font-family: 'Raleway', sans-serif; font-size: 12px; font-weight: 500;
+  color: #4A2E20; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: inherit;
+  border-right: 1px solid #C9A882;
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.tl-name-cell:hover { color: #A0785A; text-decoration: underline; text-underline-offset: 2px; }
+.tl-bar-area { position: relative; flex-shrink: 0; }
+.tl-bar {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  height: 20px; border-radius: 5px;
+  border: 1px solid #A0785A;
+  cursor: pointer; min-width: 8px;
+  transition: filter 0.12s;
+}
+.tl-bar:hover { filter: brightness(0.85); }
+.tl-bar.living {
+  background: linear-gradient(to right, #C9A882 78%, rgba(201,168,130,0.22) 100%);
+}
+.tl-bar.deceased { background: #A0785A; }
+.tl-tooltip {
+  position: fixed; z-index: 600; pointer-events: none;
+  background: #4A2E20; color: #F5EDE0;
+  font-family: 'Raleway', sans-serif; font-size: 11px; font-weight: 500;
+  padding: 5px 11px; border-radius: 7px;
+  white-space: nowrap; opacity: 0; transition: opacity 0.12s;
+  box-shadow: 0 2px 10px rgba(74,46,32,0.25);
+}
+.tl-tooltip.visible { opacity: 1; }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">Kardashian Family Tree</span>
+  <a href="#list" class="pill-btn" id="btn-list">List</a>
+  <a href="#arthur-kardashian" class="pill-btn" id="btn-rolodex">Rolodex</a>
+  <a href="#tree" class="pill-btn" id="btn-tree">Tree</a>
+  <a href="#timeline" class="pill-btn" id="btn-timeline">Timeline</a>
+</nav>
+
+<div id="list-view"></div>
+<div id="card-view" class="hidden"></div>
+<div id="tree-view" class="hidden"></div>
+<div id="timeline-view" class="hidden"></div>
+<div id="scroll-pill" class="scroll-pill"></div>
+
+<div id="modal-backdrop" class="modal-backdrop hidden" onclick="handleBackdropClick(event)">
+  <div class="modal-inner" id="modal-inner"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+const PEOPLE = {
+  'arthur-kardashian': {
+    id: 'arthur-kardashian', firstName: 'Arthur', lastName: 'Kardashian',
+    fullName: 'Arthur Thomas Kardashian',
+    born: 'Oct 27, 1917', bornSort: '1917-10-27', died: 'Dec 9, 2012',
+    location: 'Los Angeles, CA', image: null, generation: 1,
+    connections: [
+      { label: 'Spouse',   ids: ['helen-kardashian'] },
+      { label: 'Children', ids: ['robert-kardashian-sr'] }
+    ]
+  },
+  'helen-kardashian': {
+    id: 'helen-kardashian', firstName: 'Helen', lastName: 'Kardashian',
+    fullName: 'Helen Jean Arakelian Kardashian',
+    born: 'Jul 15, 1917', bornSort: '1917-07-15', died: 'May 21, 2008',
+    location: 'Oakland / Mission Hills, CA', image: null, generation: 1,
+    connections: [
+      { label: 'Spouse',   ids: ['arthur-kardashian'] },
+      { label: 'Children', ids: ['robert-kardashian-sr'] }
+    ]
+  },
+  'robert-houghton': {
+    id: 'robert-houghton', firstName: 'Robert', lastName: 'Houghton',
+    fullName: 'Robert True Houghton',
+    born: 'May 12, 1931', bornSort: '1931-05-12', died: 'Mar 29, 1975',
+    location: 'San Diego, CA', image: null, generation: 1,
+    connections: [
+      { label: 'Spouse',   ids: ['mary-jo-shannon'] },
+      { label: 'Children', ids: ['kris-jenner'] }
+    ]
+  },
+  'mary-jo-shannon': {
+    id: 'mary-jo-shannon', firstName: 'Mary Jo', lastName: 'Shannon',
+    fullName: 'Mary Jo Campbell Shannon',
+    born: 'Jul 26, 1934', bornSort: '1934-07-26', died: null,
+    location: 'Arkansas City, AR / Los Angeles, CA', image: null, generation: 1,
+    connections: [
+      { label: 'Spouse',   ids: ['robert-houghton'] },
+      { label: 'Children', ids: ['kris-jenner'] }
+    ]
+  },
+  'william-jenner': {
+    id: 'william-jenner', firstName: 'William', lastName: 'Jenner',
+    fullName: 'William Husted Jenner',
+    born: 'circa 1923', bornSort: '1923-01-01', died: 'Sep 17, 1999',
+    location: 'Mount Kisco, NY', image: null, generation: 1,
+    connections: [
+      { label: 'Spouse',   ids: ['esther-jenner'] },
+      { label: 'Children', ids: ['caitlyn-jenner'] }
+    ]
+  },
+  'esther-jenner': {
+    id: 'esther-jenner', firstName: 'Esther', lastName: 'Jenner',
+    fullName: 'Esther Ruth Jenner',
+    born: 'circa 1927', bornSort: '1927-01-01', died: null,
+    location: 'Mount Kisco, NY', image: null, generation: 1,
+    connections: [
+      { label: 'Spouse',   ids: ['william-jenner'] },
+      { label: 'Children', ids: ['caitlyn-jenner'] }
+    ]
+  },
+  'robert-kardashian-sr': {
+    id: 'robert-kardashian-sr', firstName: 'Robert', lastName: 'Kardashian',
+    fullName: 'Robert George Kardashian',
+    born: 'Feb 22, 1944', bornSort: '1944-02-22', died: 'Sep 30, 2003',
+    location: 'Los Angeles, CA', image: null, generation: 2,
+    connections: [
+      { label: 'Father',    ids: ['arthur-kardashian'] },
+      { label: 'Mother',    ids: ['helen-kardashian'] },
+      { label: 'Ex-Spouse', ids: ['kris-jenner'] },
+      { label: 'Children',  ids: ['kourtney-kardashian','kim-kardashian','khloe-kardashian','rob-kardashian-jr'] }
+    ]
+  },
+  'kris-jenner': {
+    id: 'kris-jenner', firstName: 'Kris', lastName: 'Jenner',
+    fullName: 'Kris Jenner (née Houghton)',
+    born: 'Nov 5, 1955', bornSort: '1955-11-05', died: null,
+    location: 'San Diego, CA / Calabasas, CA', image: null, generation: 2,
+    connections: [
+      { label: 'Father',   ids: ['robert-houghton'] },
+      { label: 'Mother',   ids: ['mary-jo-shannon'] },
+      { label: 'Spouses',  ids: ['robert-kardashian-sr','caitlyn-jenner'] },
+      { label: 'Children', ids: ['kourtney-kardashian','kim-kardashian','khloe-kardashian','rob-kardashian-jr','kendall-jenner','kylie-jenner'] }
+    ]
+  },
+  'caitlyn-jenner': {
+    id: 'caitlyn-jenner', firstName: 'Caitlyn', lastName: 'Jenner',
+    fullName: 'Caitlyn Jenner (formerly Bruce)',
+    born: 'Oct 28, 1949', bornSort: '1949-10-28', died: null,
+    location: 'Mount Kisco, NY / Malibu, CA', image: null, generation: 2,
+    connections: [
+      { label: 'Father',    ids: ['william-jenner'] },
+      { label: 'Mother',    ids: ['esther-jenner'] },
+      { label: 'Ex-Spouse', ids: ['kris-jenner'] },
+      { label: 'Children',  ids: ['kendall-jenner','kylie-jenner'] }
+    ]
+  },
+  'scott-disick': {
+    id: 'scott-disick', firstName: 'Scott', lastName: 'Disick',
+    fullName: 'Scott Disick',
+    born: 'May 26, 1983', bornSort: '1983-05-26', died: null,
+    location: 'Eastport, NY / Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Ex-Partner', ids: ['kourtney-kardashian'] },
+      { label: 'Children',   ids: ['mason-disick','penelope-disick','reign-disick'] }
+    ]
+  },
+  'travis-barker': {
+    id: 'travis-barker', firstName: 'Travis', lastName: 'Barker',
+    fullName: 'Travis Landon Barker',
+    born: 'Nov 14, 1975', bornSort: '1975-11-14', died: null,
+    location: 'Brea, CA / Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Spouse',   ids: ['kourtney-kardashian'] },
+      { label: 'Children', ids: ['rocky-barker'] }
+    ]
+  },
+  'kanye-west': {
+    id: 'kanye-west', firstName: 'Kanye', lastName: 'West',
+    fullName: 'Ye (formerly Kanye Omari West)',
+    born: 'Jun 8, 1977', bornSort: '1977-06-08', died: null,
+    location: 'Atlanta, GA / Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Ex-Spouse', ids: ['kim-kardashian'] },
+      { label: 'Children',  ids: ['north-west','saint-west','chicago-west','psalm-west'] }
+    ]
+  },
+  'kourtney-kardashian': {
+    id: 'kourtney-kardashian', firstName: 'Kourtney', lastName: 'Kardashian',
+    fullName: 'Kourtney Mary Kardashian Barker',
+    born: 'Apr 18, 1979', bornSort: '1979-04-18', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Father',        ids: ['robert-kardashian-sr'] },
+      { label: 'Mother',        ids: ['kris-jenner'] },
+      { label: 'Spouse',        ids: ['travis-barker'] },
+      { label: 'Ex-Partner',    ids: ['scott-disick'] },
+      { label: 'Siblings',      ids: ['kim-kardashian','khloe-kardashian','rob-kardashian-jr'] },
+      { label: 'Half-Siblings', ids: ['kendall-jenner','kylie-jenner'] },
+      { label: 'Children',      ids: ['mason-disick','penelope-disick','reign-disick','rocky-barker'] }
+    ]
+  },
+  'kim-kardashian': {
+    id: 'kim-kardashian', firstName: 'Kim', lastName: 'Kardashian',
+    fullName: 'Kimberly Noel Kardashian',
+    born: 'Oct 21, 1980', bornSort: '1980-10-21', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Father',        ids: ['robert-kardashian-sr'] },
+      { label: 'Mother',        ids: ['kris-jenner'] },
+      { label: 'Ex-Spouse',     ids: ['kanye-west'] },
+      { label: 'Siblings',      ids: ['kourtney-kardashian','khloe-kardashian','rob-kardashian-jr'] },
+      { label: 'Half-Siblings', ids: ['kendall-jenner','kylie-jenner'] },
+      { label: 'Children',      ids: ['north-west','saint-west','chicago-west','psalm-west'] }
+    ]
+  },
+  'khloe-kardashian': {
+    id: 'khloe-kardashian', firstName: 'Khloé', lastName: 'Kardashian',
+    fullName: 'Khloé Alexandra Kardashian',
+    born: 'Jun 27, 1984', bornSort: '1984-06-27', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Father',            ids: ['robert-kardashian-sr'] },
+      { label: 'Mother',            ids: ['kris-jenner'] },
+      { label: "Children's Father", ids: ['tristan-thompson'] },
+      { label: 'Siblings',          ids: ['kourtney-kardashian','kim-kardashian','rob-kardashian-jr'] },
+      { label: 'Half-Siblings',     ids: ['kendall-jenner','kylie-jenner'] },
+      { label: 'Children',          ids: ['true-thompson','tatum-thompson'] }
+    ]
+  },
+  'rob-kardashian-jr': {
+    id: 'rob-kardashian-jr', firstName: 'Rob', lastName: 'Kardashian',
+    fullName: 'Robert "Rob" Arthur Kardashian Jr.',
+    born: 'Mar 17, 1987', bornSort: '1987-03-17', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Father',          ids: ['robert-kardashian-sr'] },
+      { label: 'Mother',          ids: ['kris-jenner'] },
+      { label: "Child's Mother",  ids: ['blac-chyna'] },
+      { label: 'Siblings',        ids: ['kourtney-kardashian','kim-kardashian','khloe-kardashian'] },
+      { label: 'Half-Siblings',   ids: ['kendall-jenner','kylie-jenner'] },
+      { label: 'Children',        ids: ['dream-kardashian'] }
+    ]
+  },
+  'blac-chyna': {
+    id: 'blac-chyna', firstName: 'Blac', lastName: 'Chyna',
+    fullName: 'Angela Renée White (Blac Chyna)',
+    born: 'May 11, 1988', bornSort: '1988-05-11', died: null,
+    location: 'Washington, D.C. / Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Ex-Partner', ids: ['rob-kardashian-jr'] },
+      { label: 'Children',   ids: ['dream-kardashian'] }
+    ]
+  },
+  'tristan-thompson': {
+    id: 'tristan-thompson', firstName: 'Tristan', lastName: 'Thompson',
+    fullName: 'Tristan Trevor Thompson',
+    born: 'Mar 13, 1991', bornSort: '1991-03-13', died: null,
+    location: 'Brampton, ON / Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Ex-Partner', ids: ['khloe-kardashian'] },
+      { label: 'Children',   ids: ['true-thompson','tatum-thompson'] }
+    ]
+  },
+  'travis-scott': {
+    id: 'travis-scott', firstName: 'Travis', lastName: 'Scott',
+    fullName: 'Jacques Berman Webster II (Travis Scott)',
+    born: 'Apr 30, 1991', bornSort: '1991-04-30', died: null,
+    location: 'Houston, TX / Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Ex-Partner', ids: ['kylie-jenner'] },
+      { label: 'Children',   ids: ['stormi-webster','aire-webster'] }
+    ]
+  },
+  'kendall-jenner': {
+    id: 'kendall-jenner', firstName: 'Kendall', lastName: 'Jenner',
+    fullName: 'Kendall Nicole Jenner',
+    born: 'Nov 3, 1995', bornSort: '1995-11-03', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Father',        ids: ['caitlyn-jenner'] },
+      { label: 'Mother',        ids: ['kris-jenner'] },
+      { label: 'Sibling',       ids: ['kylie-jenner'] },
+      { label: 'Half-Siblings', ids: ['kourtney-kardashian','kim-kardashian','khloe-kardashian','rob-kardashian-jr'] }
+    ]
+  },
+  'kylie-jenner': {
+    id: 'kylie-jenner', firstName: 'Kylie', lastName: 'Jenner',
+    fullName: 'Kylie Kristen Jenner',
+    born: 'Aug 10, 1997', bornSort: '1997-08-10', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 3,
+    connections: [
+      { label: 'Father',             ids: ['caitlyn-jenner'] },
+      { label: 'Mother',             ids: ['kris-jenner'] },
+      { label: "Children's Father",  ids: ['travis-scott'] },
+      { label: 'Sibling',            ids: ['kendall-jenner'] },
+      { label: 'Half-Siblings',      ids: ['kourtney-kardashian','kim-kardashian','khloe-kardashian','rob-kardashian-jr'] },
+      { label: 'Children',           ids: ['stormi-webster','aire-webster'] }
+    ]
+  },
+  'mason-disick': {
+    id: 'mason-disick', firstName: 'Mason', lastName: 'Disick',
+    fullName: 'Mason Dash Disick',
+    born: 'Dec 14, 2009', bornSort: '2009-12-14', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',       ids: ['kourtney-kardashian'] },
+      { label: 'Father',       ids: ['scott-disick'] },
+      { label: 'Siblings',     ids: ['penelope-disick','reign-disick'] },
+      { label: 'Half-Sibling', ids: ['rocky-barker'] }
+    ]
+  },
+  'penelope-disick': {
+    id: 'penelope-disick', firstName: 'Penelope', lastName: 'Disick',
+    fullName: 'Penelope Scotland Disick',
+    born: 'Jul 8, 2012', bornSort: '2012-07-08', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',       ids: ['kourtney-kardashian'] },
+      { label: 'Father',       ids: ['scott-disick'] },
+      { label: 'Siblings',     ids: ['mason-disick','reign-disick'] },
+      { label: 'Half-Sibling', ids: ['rocky-barker'] }
+    ]
+  },
+  'north-west': {
+    id: 'north-west', firstName: 'North', lastName: 'West',
+    fullName: 'North West',
+    born: 'Jun 15, 2013', bornSort: '2013-06-15', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',   ids: ['kim-kardashian'] },
+      { label: 'Father',   ids: ['kanye-west'] },
+      { label: 'Siblings', ids: ['saint-west','chicago-west','psalm-west'] }
+    ]
+  },
+  'reign-disick': {
+    id: 'reign-disick', firstName: 'Reign', lastName: 'Disick',
+    fullName: 'Reign Aston Disick',
+    born: 'Dec 14, 2014', bornSort: '2014-12-14', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',       ids: ['kourtney-kardashian'] },
+      { label: 'Father',       ids: ['scott-disick'] },
+      { label: 'Siblings',     ids: ['mason-disick','penelope-disick'] },
+      { label: 'Half-Sibling', ids: ['rocky-barker'] }
+    ]
+  },
+  'saint-west': {
+    id: 'saint-west', firstName: 'Saint', lastName: 'West',
+    fullName: 'Saint West',
+    born: 'Dec 5, 2015', bornSort: '2015-12-05', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',   ids: ['kim-kardashian'] },
+      { label: 'Father',   ids: ['kanye-west'] },
+      { label: 'Siblings', ids: ['north-west','chicago-west','psalm-west'] }
+    ]
+  },
+  'dream-kardashian': {
+    id: 'dream-kardashian', firstName: 'Dream', lastName: 'Kardashian',
+    fullName: 'Dream Renée Kardashian',
+    born: 'Nov 10, 2016', bornSort: '2016-11-10', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Father', ids: ['rob-kardashian-jr'] },
+      { label: 'Mother', ids: ['blac-chyna'] }
+    ]
+  },
+  'chicago-west': {
+    id: 'chicago-west', firstName: 'Chicago', lastName: 'West',
+    fullName: 'Chicago West',
+    born: 'Jan 15, 2018', bornSort: '2018-01-15', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',   ids: ['kim-kardashian'] },
+      { label: 'Father',   ids: ['kanye-west'] },
+      { label: 'Siblings', ids: ['north-west','saint-west','psalm-west'] }
+    ]
+  },
+  'stormi-webster': {
+    id: 'stormi-webster', firstName: 'Stormi', lastName: 'Webster',
+    fullName: 'Stormi Webster',
+    born: 'Feb 1, 2018', bornSort: '2018-02-01', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',  ids: ['kylie-jenner'] },
+      { label: 'Father',  ids: ['travis-scott'] },
+      { label: 'Sibling', ids: ['aire-webster'] }
+    ]
+  },
+  'true-thompson': {
+    id: 'true-thompson', firstName: 'True', lastName: 'Thompson',
+    fullName: 'True Thompson',
+    born: 'Apr 12, 2018', bornSort: '2018-04-12', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',  ids: ['khloe-kardashian'] },
+      { label: 'Father',  ids: ['tristan-thompson'] },
+      { label: 'Sibling', ids: ['tatum-thompson'] }
+    ]
+  },
+  'psalm-west': {
+    id: 'psalm-west', firstName: 'Psalm', lastName: 'West',
+    fullName: 'Psalm West',
+    born: 'May 9, 2019', bornSort: '2019-05-09', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',   ids: ['kim-kardashian'] },
+      { label: 'Father',   ids: ['kanye-west'] },
+      { label: 'Siblings', ids: ['north-west','saint-west','chicago-west'] }
+    ]
+  },
+  'aire-webster': {
+    id: 'aire-webster', firstName: 'Aire', lastName: 'Webster',
+    fullName: 'Aire Webster',
+    born: 'Feb 2, 2022', bornSort: '2022-02-02', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',  ids: ['kylie-jenner'] },
+      { label: 'Father',  ids: ['travis-scott'] },
+      { label: 'Sibling', ids: ['stormi-webster'] }
+    ]
+  },
+  'tatum-thompson': {
+    id: 'tatum-thompson', firstName: 'Tatum', lastName: 'Thompson',
+    fullName: 'Tatum Thompson',
+    born: 'Jul 28, 2022', bornSort: '2022-07-28', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',  ids: ['khloe-kardashian'] },
+      { label: 'Father',  ids: ['tristan-thompson'] },
+      { label: 'Sibling', ids: ['true-thompson'] }
+    ]
+  },
+  'rocky-barker': {
+    id: 'rocky-barker', firstName: 'Rocky', lastName: 'Barker',
+    fullName: 'Rocky Thirteen Barker',
+    born: 'Nov 1, 2023', bornSort: '2023-11-01', died: null,
+    location: 'Los Angeles, CA', image: null, generation: 4,
+    connections: [
+      { label: 'Mother',        ids: ['kourtney-kardashian'] },
+      { label: 'Father',        ids: ['travis-barker'] },
+      { label: 'Half-Siblings', ids: ['mason-disick','penelope-disick','reign-disick'] }
+    ]
+  }
+};
+
+const ORDERED = Object.values(PEOPLE).sort((a, b) => a.bornSort.localeCompare(b.bornSort));
+const GEN_LABELS = {
+  1: 'Generation I  ·  Grandparents',
+  2: 'Generation II  ·  Parents',
+  3: 'Generation III  ·  The Siblings',
+  4: 'Generation IV  ·  Grandchildren'
+};
+
+// ═══════════════════════════════════════════
+//  TREE ZOOM / PAN STATE
+// ═══════════════════════════════════════════
+let treeScale = 1, treePanX = 0, treePanY = 0;
+let _treeDragging = false, _treeDragOrigin = { x: 0, y: 0 };
+
+function applyTreeTransform() {
+  const t = document.getElementById('tree-transform');
+  if (t) t.style.transform = `translate(${treePanX}px,${treePanY}px) scale(${treeScale})`;
+}
+
+function treeZoom(factor) {
+  const view = document.getElementById('tree-view');
+  if (!view) return;
+  const cx = view.clientWidth / 2, cy = view.clientHeight / 2;
+  const ns = Math.max(0.2, Math.min(3, treeScale * factor));
+  const r  = ns / treeScale;
+  treePanX = cx - r * (cx - treePanX);
+  treePanY = cy - r * (cy - treePanY);
+  treeScale = ns;
+  applyTreeTransform();
+}
+
+function initTreePanZoom() {
+  const view = document.getElementById('tree-view');
+  if (!view || view._pzInit) return;
+  view._pzInit = true;
+
+  view.addEventListener('wheel', e => {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.1 : 0.909;
+    const rect = view.getBoundingClientRect();
+    const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
+    const ns = Math.max(0.2, Math.min(3, treeScale * factor));
+    const r  = ns / treeScale;
+    treePanX = cx - r * (cx - treePanX);
+    treePanY = cy - r * (cy - treePanY);
+    treeScale = ns;
+    applyTreeTransform();
+  }, { passive: false });
+
+  view.addEventListener('pointerdown', e => {
+    if (e.target.closest('.tree-node') || e.target.closest('.zoom-btn')) return;
+    _treeDragging = true;
+    _treeDragOrigin = { x: e.clientX - treePanX, y: e.clientY - treePanY };
+    view.classList.add('panning');
+    view.setPointerCapture(e.pointerId);
+  });
+
+  view.addEventListener('pointermove', e => {
+    if (!_treeDragging) return;
+    treePanX = e.clientX - _treeDragOrigin.x;
+    treePanY = e.clientY - _treeDragOrigin.y;
+    applyTreeTransform();
+  });
+
+  const endDrag = () => { _treeDragging = false; document.getElementById('tree-view')?.classList.remove('panning'); };
+  view.addEventListener('pointerup',     endDrag);
+  view.addEventListener('pointercancel', endDrag);
+}
+
+function centerTree() {
+  const view = document.getElementById('tree-view');
+  const inner = document.getElementById('tree-transform');
+  if (!view || !inner) return;
+  treePanX = Math.round((view.clientWidth  - inner.offsetWidth)  / 2);
+  treePanY = Math.round((view.clientHeight - inner.offsetHeight) / 2);
+  if (treePanX < 0) treePanX = 0;
+  if (treePanY < 0) treePanY = 20;
+  applyTreeTransform();
+}
+
+// ═══════════════════════════════════════════
+//  TREE CONFIG
+// ═══════════════════════════════════════════
+const TREE_ROLES = {
+  'arthur-kardashian':    'Grandfather',
+  'helen-kardashian':     'Grandmother',
+  'robert-houghton':      'Grandfather',
+  'mary-jo-shannon':      'Grandmother',
+  'william-jenner':       'Grandfather',
+  'esther-jenner':        'Grandmother',
+  'robert-kardashian-sr': 'Father',
+  'kris-jenner':          'Momager',
+  'caitlyn-jenner':       'Parent',
+  'scott-disick':         "Kourtney's Ex",
+  'travis-barker':        "Kourtney's Husband",
+  'kanye-west':           "Kim's Ex",
+  'kourtney-kardashian':  'Kardashian',
+  'kim-kardashian':       'Kardashian',
+  'khloe-kardashian':     'Kardashian',
+  'rob-kardashian-jr':    'Kardashian',
+  'blac-chyna':           "Rob's Ex",
+  'tristan-thompson':     "Khloé's Ex",
+  'travis-scott':         "Kylie's Ex",
+  'kendall-jenner':       'Jenner',
+  'kylie-jenner':         'Jenner',
+  'mason-disick':         'Disick',
+  'penelope-disick':      'Disick',
+  'north-west':           'West',
+  'reign-disick':         'Disick',
+  'saint-west':           'West',
+  'dream-kardashian':     'Kardashian',
+  'chicago-west':         'West',
+  'stormi-webster':       'Webster',
+  'true-thompson':        'Thompson',
+  'psalm-west':           'West',
+  'aire-webster':         'Webster',
+  'tatum-thompson':       'Thompson',
+  'rocky-barker':         'Barker',
+};
+
+// Each row is an array of groups; each group is an ordered array of IDs shown with + separators.
+// Kris appears once (center of Row 1) flanked by both spouses.
+// Kourtney appears once (center of first group in Row 2) flanked by both partners.
+const TREE_ROW_GROUPS = [
+  // Row 0 — Gen I grandparents
+  [
+    ['arthur-kardashian', 'helen-kardashian'],
+    ['robert-houghton',   'mary-jo-shannon'],
+    ['william-jenner',    'esther-jenner'],
+  ],
+  // Row 1 — Gen II parents (Kris once, between her two spouses)
+  [
+    ['robert-kardashian-sr', 'kris-jenner', 'caitlyn-jenner'],
+  ],
+  // Row 2 — Gen III siblings + partners (Kourtney once, between her two partners)
+  [
+    ['scott-disick', 'kourtney-kardashian', 'travis-barker'],
+    ['kim-kardashian',    'kanye-west'],
+    ['khloe-kardashian',  'tristan-thompson'],
+    ['rob-kardashian-jr', 'blac-chyna'],
+    ['kendall-jenner'],
+    ['kylie-jenner',      'travis-scott'],
+  ],
+  // Row 3 — Gen IV grandchildren, grouped by family
+  [
+    ['mason-disick', 'penelope-disick', 'reign-disick'],
+    ['rocky-barker'],
+    ['north-west', 'saint-west', 'chicago-west', 'psalm-west'],
+    ['true-thompson', 'tatum-thompson'],
+    ['dream-kardashian'],
+    ['stormi-webster', 'aire-webster'],
+  ],
+];
+
+// Defines which parent nodes connect to which child nodes via SVG fishbone lines.
+const TREE_CONNECTIONS = [
+  { parents: ['arthur-kardashian',    'helen-kardashian'],  children: ['robert-kardashian-sr'] },
+  { parents: ['robert-houghton',      'mary-jo-shannon'],   children: ['kris-jenner'] },
+  { parents: ['william-jenner',       'esther-jenner'],     children: ['caitlyn-jenner'] },
+  { parents: ['robert-kardashian-sr', 'kris-jenner'],       children: ['kourtney-kardashian','kim-kardashian','khloe-kardashian','rob-kardashian-jr'] },
+  { parents: ['kris-jenner',          'caitlyn-jenner'],    children: ['kendall-jenner','kylie-jenner'] },
+  { parents: ['scott-disick',         'kourtney-kardashian'], children: ['mason-disick','penelope-disick','reign-disick'] },
+  { parents: ['kourtney-kardashian',  'travis-barker'],     children: ['rocky-barker'] },
+  { parents: ['kim-kardashian',       'kanye-west'],        children: ['north-west','saint-west','chicago-west','psalm-west'] },
+  { parents: ['khloe-kardashian',     'tristan-thompson'],  children: ['true-thompson','tatum-thompson'] },
+  { parents: ['rob-kardashian-jr',    'blac-chyna'],        children: ['dream-kardashian'] },
+  { parents: ['kylie-jenner',         'travis-scott'],      children: ['stormi-webster','aire-webster'] },
+];
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+let currentSort = 'firstname';
+let _cardBackHash = 'list'; // last named view before opening a card
+
+function getInitials(p) {
+  return (p.firstName.trim().charAt(0) + p.lastName.charAt(0)).toUpperCase();
+}
+
+function getAvatarColor(id) {
+  return '#C9A882';
+}
+
+// Derives the image filename base from a person's first + last name.
+// e.g. "Khloé" "Kardashian" → "khloe-kardashian"
+function imgBase(p) {
+  const fn = p.firstName.toLowerCase().replace(/\s+/g, '-');
+  const ln = p.lastName.toLowerCase();
+  return (fn + '-' + ln)
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
+function avatarHtml(p, size, fontSize, extraStyle) {
+  const base = `position:relative;width:${size}px;height:${size}px;border-radius:50%;` +
+    `background:${getAvatarColor(p.id)};` +
+    `display:flex;align-items:center;justify-content:center;` +
+    `font-size:${fontSize}px;font-weight:bold;color:#4A2E20;flex-shrink:0;overflow:hidden;` +
+    (extraStyle || '');
+  const src = imgBase(p);
+  // Initials show by default; img overlays them. onerror tries .jpg then hides on failure.
+  return `<div style="${base}">${getInitials(p)}` +
+    `<img src="${src}.jpeg" alt="${p.firstName}" ` +
+    `style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" ` +
+    `onerror="if(!this.dataset.t){this.dataset.t='1';this.src='${src}.jpg';}else{this.style.display='none';}">` +
+    `</div>`;
+}
+
+// ═══════════════════════════════════════════
+//  RENDER: CARD
+// ═══════════════════════════════════════════
+function renderCardHtml(id, context) {
+  const p = PEOPLE[id];
+  if (!p) return '<p style="padding:40px;color:#888">Person not found.</p>';
+
+  const dodRow = p.died
+    ? `<div class="card-field"><b>DOD:</b>&nbsp; ${p.died}</div>`
+    : `<div class="card-field"><b>DOD:</b>&nbsp; <span style="color:#BBBBBB">Living</span></div>`;
+
+  let connHtml = '';
+  for (const group of p.connections) {
+    const btns = group.ids.filter(cid => PEOPLE[cid]).map(cid => {
+      const cp = PEOPLE[cid];
+      if (context === 'modal') {
+        return `<button class="conn-btn" onclick="openModal('${cid}')">${cp.firstName}</button>`;
+      }
+      return `<a href="#${cid}" class="conn-btn">${cp.firstName}</a>`;
+    }).join('');
+    if (btns) connHtml += `
+      <div class="conn-group">
+        <div class="conn-group-label">${group.label}</div>
+        <div class="conn-buttons">${btns}</div>
+      </div>`;
+  }
+
+  const closeBtn = context === 'modal'
+    ? `<button class="modal-close" onclick="closeModal()">&#x2715;</button>` : '';
+
+  let navHtml = '';
+  if (context === 'rolodex') {
+    const idx  = ORDERED.findIndex(x => x.id === id);
+    const prev = ORDERED[idx - 1];
+    const next = ORDERED[idx + 1];
+    const prevNav = prev ? `<a href="#${prev.id}">← ${prev.firstName}</a>` : `<span class="nav-spacer"></span>`;
+    const nextNav = next ? `<a href="#${next.id}">${next.firstName} →</a>` : `<span class="nav-spacer"></span>`;
+    navHtml = `<div class="card-nav">${prevNav}<a href="#list" class="nav-center">↑ List</a>${nextNav}</div>`;
+  }
+
+  return `<div class="card">
+    ${closeBtn}
+    ${avatarHtml(p, 172, 50, 'margin:4px auto 22px;')}
+    <div class="card-name">${p.fullName}</div>
+    <div class="card-fields">
+      <div class="card-field"><b>DOB:</b>&nbsp; ${p.born}</div>
+      ${dodRow}
+      <div class="card-field" style="color:#A0785A;">${p.location}</div>
+    </div>
+    <div class="card-connections-title">Connections</div>
+    ${connHtml || '<div style="font-size:12px;color:#BBB">—</div>'}
+  </div>${navHtml}`;
+}
+
+// ═══════════════════════════════════════════
+//  RENDER: LIST
+// ═══════════════════════════════════════════
+function listItemHtml(p) {
+  const meta = p.born + (p.died ? '  –  ' + p.died : '  ·  Living');
+  const yearAttr = `data-year="${p.bornSort.substring(0,4)}"`;
+  return `<a href="#${p.id}" class="list-card" ${yearAttr}>
+    ${avatarHtml(p, 40, 12, 'margin-right:12px;')}
+    <div class="list-info">
+      <div class="list-name">${p.fullName}</div>
+      <div class="list-meta">${meta}</div>
+    </div>
+    <div class="list-arrow">›</div>
+  </a>`;
+}
+
+function renderList(sort) {
+  currentSort = sort;
+  document.querySelectorAll('.sort-pill').forEach(b => b.classList.toggle('active', b.dataset.sort === sort));
+  let items = Object.values(PEOPLE);
+  let html  = '';
+
+  if (sort === 'firstname') {
+    items.sort((a, b) => a.firstName.localeCompare(b.firstName));
+    let last = '';
+    for (const p of items) {
+      const L = p.firstName.charAt(0).toUpperCase();
+      if (L !== last) { last = L; html += `<div class="section-divider">${L}</div>`; }
+      html += listItemHtml(p);
+    }
+  } else if (sort === 'lastname') {
+    items.sort((a, b) => a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName));
+    let last = '';
+    for (const p of items) {
+      const L = p.lastName.charAt(0).toUpperCase();
+      if (L !== last) { last = L; html += `<div class="section-divider">${L}</div>`; }
+      html += listItemHtml(p);
+    }
+  } else {
+    items.sort((a, b) => a.bornSort.localeCompare(b.bornSort));
+    let lastDecade = '';
+    for (const p of items) {
+      const decade = p.bornSort.substring(0,3) + '0s';
+      if (decade !== lastDecade) {
+        lastDecade = decade;
+        html += `<div class="section-divider" data-decade="${decade}">${decade}</div>`;
+      }
+      html += listItemHtml(p);
+    }
+  }
+
+  document.getElementById('list-content').innerHTML = html;
+  setupScrollIndicator();
+}
+
+function buildListView() {
+  document.getElementById('list-view').innerHTML = `
+    <div style="max-width:680px;margin:0 auto;padding:28px 16px 60px;">
+      <div class="list-controls">
+        <span class="list-controls-label">Sort by:</span>
+        <button class="pill-btn sort-pill active" data-sort="firstname" onclick="renderList('firstname')">First Name</button>
+        <button class="pill-btn sort-pill"        data-sort="lastname"  onclick="renderList('lastname')">Last Name</button>
+        <button class="pill-btn sort-pill"        data-sort="birth"     onclick="renderList('birth')">Birthday</button>
+      </div>
+      <div id="list-content"></div>
+    </div>`;
+  renderList(currentSort);
+}
+
+// ═══════════════════════════════════════════
+//  TREE
+// ═══════════════════════════════════════════
+function treeNodeHtml(id) {
+  const p = PEOPLE[id];
+  if (!p) return '';
+  const _src = imgBase(p);
+  const av = `<div class="tree-node-avatar" style="background:${getAvatarColor(id)};position:relative;">` +
+    `${getInitials(p)}` +
+    `<img src="${_src}.jpeg" alt="${p.firstName}" ` +
+    `style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" ` +
+    `onerror="if(!this.dataset.t){this.dataset.t='1';this.src='${_src}.jpg';}else{this.style.display='none';}">` +
+    `</div>`;
+  return `<div class="tree-node" data-id="${id}" onclick="openModal('${id}')">` +
+    av +
+    `<div class="tree-node-info">` +
+      `<div class="tree-node-name">${p.firstName}</div>` +
+      `<div class="tree-node-role">${TREE_ROLES[id] || ''}</div>` +
+    `</div></div>`;
+}
+
+function buildTreeView() {
+  const view = document.getElementById('tree-view');
+  if (view.dataset.built) return;
+  view.dataset.built = '1';
+
+  // Render a flex group of nodes with + separators
+  function nodeGroup(ids) {
+    return `<div class="tree-group">${ids.map((id, i) =>
+      (i > 0 ? '<span class="tree-sep">+</span>' : '') + treeNodeHtml(id)
+    ).join('')}</div>`;
+  }
+
+  // A single centered row containing one node-group
+  function row(ids) {
+    return `<div class="tree-row-inner">${nodeGroup(ids)}</div>`;
+  }
+
+  // A family column: gen3 group on top, optional gen4 sub-groups below
+  function familyCol(gen3, gen4groups) {
+    const g3 = `<div class="tree-row-inner">${nodeGroup(gen3)}</div>`;
+    const g4 = gen4groups.length
+      ? `<div class="tree-gen-spacer"></div>` +
+        `<div class="tree-row-inner gen4">${gen4groups.map(sg => nodeGroup(sg)).join('')}</div>`
+      : '';
+    return `<div class="family-col">${g3}${g4}</div>`;
+  }
+
+  // ── Three vertical branches ──────────────────────────────────────────
+  // Kardashian branch: Arthur+Helen above Robert Sr. above 4 family cols
+  // Kris branch:       Robert H.+Mary Jo above Kris (she bridges both couples)
+  // Jenner branch:     William+Esther above Caitlyn above 2 family cols
+  //
+  // Each branch is a flex-column, so every generation in every branch sits
+  // at the same Y level — giving straight vertical lines within each branch
+  // and well-anchored diagonal lines across branches.
+  const html = `<div class="tree-main-branches">
+
+    <div class="branch">
+      ${row(['arthur-kardashian','helen-kardashian'])}
+      <div class="tree-gen-spacer"></div>
+      ${row(['robert-kardashian-sr'])}
+      <div class="tree-gen-spacer"></div>
+      <div class="tree-family-row">
+        ${familyCol(['scott-disick','kourtney-kardashian','travis-barker'],
+            [['mason-disick','penelope-disick','reign-disick'],['rocky-barker']])}
+        ${familyCol(['kim-kardashian','kanye-west'],
+            [['north-west','saint-west','chicago-west','psalm-west']])}
+        ${familyCol(['khloe-kardashian','tristan-thompson'],
+            [['true-thompson','tatum-thompson']])}
+        ${familyCol(['rob-kardashian-jr','blac-chyna'],
+            [['dream-kardashian']])}
+      </div>
+    </div>
+
+    <div class="branch">
+      ${row(['robert-houghton','mary-jo-shannon'])}
+      <div class="tree-gen-spacer"></div>
+      ${row(['kris-jenner'])}
+    </div>
+
+    <div class="branch">
+      ${row(['william-jenner','esther-jenner'])}
+      <div class="tree-gen-spacer"></div>
+      ${row(['caitlyn-jenner'])}
+      <div class="tree-gen-spacer"></div>
+      <div class="tree-family-row">
+        ${familyCol(['kendall-jenner'], [])}
+        ${familyCol(['kylie-jenner','travis-scott'],
+            [['stormi-webster','aire-webster']])}
+      </div>
+    </div>
+
+  </div>`;
+
+  // Reset pan/zoom on every fresh build
+  treeScale = 1; treePanX = 0; treePanY = 0;
+
+  view.innerHTML =
+    `<div id="tree-transform">` +
+      `<div class="tree-scroll" id="tree-scroll">` +
+        `<svg class="tree-svg" id="tree-svg"></svg>${html}` +
+      `</div>` +
+    `</div>` +
+    `<div class="tree-zoom-controls">` +
+      `<button class="zoom-btn" onclick="treeZoom(1.25)">+</button>` +
+      `<button class="zoom-btn" onclick="treeZoom(0.8)">−</button>` +
+    `</div>`;
+
+  initTreePanZoom();
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    drawTreeLines();
+    centerTree();
+  }));
+}
+
+function drawTreeLines() {
+  const scroll = document.getElementById('tree-scroll');
+  const svg    = document.getElementById('tree-svg');
+  if (!scroll || !svg) return;
+
+  svg.setAttribute('width',  scroll.scrollWidth);
+  svg.setAttribute('height', scroll.scrollHeight);
+  svg.innerHTML = '';
+
+  // Use getBoundingClientRect for accurate positions relative to tree-scroll
+  const scrollRect = scroll.getBoundingClientRect();
+
+  function getPos(id) {
+    const el = scroll.querySelector(`.tree-node[data-id="${id}"]`);
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    const s = treeScale || 1;
+    return {
+      cx:     (r.left - scrollRect.left) / s + (r.width / s) / 2,
+      top:    (r.top  - scrollRect.top)  / s,
+      bottom: (r.bottom - scrollRect.top) / s
+    };
+  }
+
+  function seg(x1, y1, x2, y2) {
+    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    l.setAttribute('x1', Math.round(x1)); l.setAttribute('y1', Math.round(y1));
+    l.setAttribute('x2', Math.round(x2)); l.setAttribute('y2', Math.round(y2));
+    l.setAttribute('stroke', '#B07850');
+    l.setAttribute('stroke-width', '1.5');
+    l.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(l);
+  }
+
+  function fishbone(parentIds, childIds) {
+    const pars = parentIds.map(getPos).filter(Boolean);
+    const kids = childIds.map(getPos).filter(Boolean);
+    if (!pars.length || !kids.length) return;
+
+    const pBottom = Math.max(...pars.map(p => p.bottom));
+    const kTop    = Math.min(...kids.map(c => c.top));
+    if (kTop <= pBottom) return;
+
+    const gap    = kTop - pBottom;
+    const coupleY = pBottom + Math.min(14, gap * 0.2);
+    const lineY   = pBottom + gap * 0.52;
+
+    // Draw couple bracket and stem; record the stem's X
+    let stemX;
+    if (pars.length >= 2) {
+      const pxs = pars.map(p => p.cx);
+      for (const par of pars) seg(par.cx, par.bottom, par.cx, coupleY);
+      seg(Math.min(...pxs), coupleY, Math.max(...pxs), coupleY);
+      stemX = (Math.min(...pxs) + Math.max(...pxs)) / 2;
+      seg(stemX, coupleY, stemX, lineY);
+    } else {
+      stemX = pars[0].cx;
+      seg(stemX, pars[0].bottom, stemX, lineY);
+    }
+
+    // Horizontal bar at lineY spanning the stem AND every child — this ensures
+    // the connection is always drawn even when parents and children are offset horizontally
+    const cxs  = kids.map(c => c.cx);
+    const allXs = [stemX, ...cxs];
+    seg(Math.min(...allXs), lineY, Math.max(...allXs), lineY);
+
+    // Vertical drops from lineY down to each child's top
+    for (const k of kids) seg(k.cx, lineY, k.cx, k.top);
+  }
+
+  for (const conn of TREE_CONNECTIONS) fishbone(conn.parents, conn.children);
+}
+
+window.addEventListener('resize', () => {
+  if (!document.getElementById('tree-view').classList.contains('hidden')) drawTreeLines();
+});
+
+// ═══════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════
+function openModal(id) {
+  const inner = document.getElementById('modal-inner');
+  inner.innerHTML = renderCardHtml(id, 'modal');
+  document.getElementById('modal-backdrop').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const bd = document.getElementById('modal-backdrop');
+  bd.classList.add('hidden');
+  bd.classList.remove('tl-variant');
+  document.body.style.overflow = '';
+}
+
+function openTimelineModal(id) {
+  openModal(id);
+  document.getElementById('modal-backdrop').classList.add('tl-variant');
+}
+
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById('modal-backdrop')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ═══════════════════════════════════════════
+//  SCROLL INDICATOR
+// ═══════════════════════════════════════════
+function setupScrollIndicator() {
+  const pill = document.getElementById('scroll-pill');
+  if (!pill) return;
+  if (window._scrollObs) { window._scrollObs.disconnect(); window._scrollObs = null; }
+
+  const listContent = document.getElementById('list-content');
+  if (!listContent) { pill.classList.remove('visible'); return; }
+
+  // Letter sorts: observe section-dividers. Birth sort: observe list cards with data-year.
+  const useCards = (currentSort === 'birth');
+  const targets = useCards
+    ? [...listContent.querySelectorAll('.list-card[data-year]')]
+    : [...listContent.querySelectorAll('.section-divider')];
+
+  if (!targets.length) { pill.classList.remove('visible'); return; }
+  pill.classList.add('visible');
+
+  const getLabel = el => useCards ? el.dataset.year : el.textContent.trim();
+
+  // Set initial label to the first item
+  pill.textContent = getLabel(targets[0]);
+
+  window._scrollObs = new IntersectionObserver(entries => {
+    // Pick the topmost entry that's entering the viewport
+    const hitting = entries
+      .filter(e => e.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (hitting.length) pill.textContent = getLabel(hitting[0].target);
+  }, {
+    root: null,
+    rootMargin: '0px 0px -80% 0px',  // fires when element enters top 20% of viewport
+    threshold: 0
+  });
+
+  targets.forEach(t => window._scrollObs.observe(t));
+}
+
+// ═══════════════════════════════════════════
+//  TIMELINE
+// ═══════════════════════════════════════════
+function buildTimelineView() {
+  const view = document.getElementById('timeline-view');
+  if (view.dataset.built) return;
+  view.dataset.built = '1';
+
+  const TODAY     = new Date().getFullYear();
+  const PX_PER_YR = 13;
+  const PAD_L     = 16;
+  const PAD_R     = 50;
+
+  const people  = Object.values(PEOPLE).sort((a, b) => a.bornSort.localeCompare(b.bornSort));
+  const minYear = parseInt(people[0].bornSort.substring(0, 4)) - 3;
+  const maxYear = TODAY + 3;
+  const chartW  = Math.round((maxYear - minYear) * PX_PER_YR) + PAD_L + PAD_R;
+
+  function xOf(year) { return Math.round(PAD_L + (year - minYear) * PX_PER_YR); }
+
+  // Year axis ticks every 10 years
+  let axisHtml = '';
+  for (let y = Math.ceil(minYear / 10) * 10; y <= maxYear; y += 10) {
+    axisHtml += `<span class="tl-tick" style="left:${xOf(y)}px">${y}</span>`;
+  }
+
+  // Person rows sorted oldest → youngest
+  let rowsHtml = '';
+  people.forEach((p, i) => {
+    const bYear  = parseInt(p.bornSort.substring(0, 4));
+    const eYear  = p.died ? parseInt(p.died.match(/\d{4}/)[0]) : TODAY;
+    const barX   = xOf(bYear);
+    const barW   = Math.max(8, Math.round((eYear - bYear) * PX_PER_YR));
+    const cls    = p.died ? 'deceased' : 'living';
+    const rowCls = i % 2 === 0 ? 'even' : 'odd';
+    const bLabel = p.born.startsWith('circa') ? `c.${bYear}` : `${bYear}`;
+    const eLabel = p.died ? String(eYear) : 'Present';
+    const tip    = `${p.fullName}  ·  ${bLabel} – ${eLabel}`;
+
+    rowsHtml += `<div class="tl-row ${rowCls}">
+      <div class="tl-name-cell" onclick="openTimelineModal('${p.id}')">${p.firstName} ${p.lastName}</div>
+      <div class="tl-bar-area" style="width:${chartW}px">
+        <div class="tl-bar ${cls}" data-id="${p.id}" data-tip="${tip}" style="left:${barX}px;width:${barW}px"></div>
+      </div>
+    </div>`;
+  });
+
+  view.innerHTML = `
+    <div class="tl-header">
+      <div class="tl-title">Family Timeline</div>
+      <div class="tl-legend">
+        <div class="tl-legend-item"><span class="tl-legend-swatch living"></span>Living</div>
+        <div class="tl-legend-item"><span class="tl-legend-swatch deceased"></span>Deceased</div>
+      </div>
+    </div>
+    <div class="tl-body">
+      <div class="tl-axis-row">
+        <div class="tl-name-header">Person</div>
+        <div class="tl-axis-ticks-wrap" style="width:${chartW}px">${axisHtml}</div>
+      </div>
+      ${rowsHtml}
+    </div>
+    <div class="tl-tooltip" id="tl-tooltip"></div>
+  `;
+
+  const tooltip = document.getElementById('tl-tooltip');
+  view.querySelectorAll('.tl-bar').forEach(bar => {
+    bar.addEventListener('mouseenter', () => {
+      tooltip.textContent = bar.dataset.tip;
+      tooltip.classList.add('visible');
+    });
+    bar.addEventListener('mousemove', e => {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top  = (e.clientY - 38) + 'px';
+    });
+    bar.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+    bar.addEventListener('click', () => { openTimelineModal(bar.dataset.id); });
+  });
+}
+
+// ═══════════════════════════════════════════
+//  ROUTING
+// ═══════════════════════════════════════════
+function route() {
+  const hash         = (window.location.hash || '#list').slice(1) || 'list';
+  const listView     = document.getElementById('list-view');
+  const cardView     = document.getElementById('card-view');
+  const treeView     = document.getElementById('tree-view');
+  const timelineView = document.getElementById('timeline-view');
+  const btnList      = document.getElementById('btn-list');
+  const btnRolo      = document.getElementById('btn-rolodex');
+  const btnTree      = document.getElementById('btn-tree');
+  const btnTimeline  = document.getElementById('btn-timeline');
+
+  [listView, cardView, treeView, timelineView].forEach(v => v.classList.add('hidden'));
+  [btnList, btnRolo, btnTree, btnTimeline].forEach(b => b.classList.remove('active'));
+
+  if (hash === 'list') {
+    _cardBackHash = 'list';
+    listView.classList.remove('hidden'); btnList.classList.add('active');
+    buildListView(); window.scrollTo(0, 0);
+  } else if (hash === 'tree') {
+    _cardBackHash = 'tree';
+    treeView.classList.remove('hidden'); btnTree.classList.add('active');
+    const _p = document.getElementById('scroll-pill'); if (_p) _p.classList.remove('visible');
+    buildTreeView(); window.scrollTo(0, 0);
+  } else if (hash === 'timeline') {
+    _cardBackHash = 'timeline';
+    timelineView.classList.remove('hidden'); btnTimeline.classList.add('active');
+    const _p = document.getElementById('scroll-pill'); if (_p) _p.classList.remove('visible');
+    buildTimelineView(); window.scrollTo(0, 0);
+  } else if (PEOPLE[hash]) {
+    const _p = document.getElementById('scroll-pill'); if (_p) _p.classList.remove('visible');
+    cardView.classList.remove('hidden'); btnRolo.classList.add('active');
+    btnRolo.href = '#' + hash;
+    cardView.innerHTML = `<div class="card-wrapper">${renderCardHtml(hash, 'rolodex')}</div>`;
+    cardView.onclick = e => { if (e.target === cardView) window.location.hash = _cardBackHash; };
+    window.scrollTo(0, 0);
+  } else {
+    history.replaceState(null, '', '#list'); route();
+  }
+}
+
+window.addEventListener('hashchange', route);
+window.addEventListener('DOMContentLoaded', () => {
+  if (!window.location.hash || window.location.hash === '#') history.replaceState(null, '', '#list');
+  route();
+});
+</script>
+</body>
+</html>
